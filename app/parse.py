@@ -9,11 +9,13 @@ from bs4 import BeautifulSoup, Tag
 
 BASE_URL = "https://quotes.toscrape.com/"
 
+
 @dataclass
 class Quote:
     text: str
     author: str
     tags: list[str]
+
 
 QUOTE_FIELDS = [field.name for field in fields(Quote)]
 
@@ -35,7 +37,7 @@ def get_single_quote(quote: Tag) -> Quote:
     )
 
 
-def get_single_page_quotes(page_num):
+def get_single_page_quotes(page_num: int) -> [Quote]:
     paginate_url = urljoin(BASE_URL, f"page/{page_num}/")
     text = requests.get(paginate_url).content
     soup = BeautifulSoup(text, "html.parser")
@@ -68,6 +70,7 @@ def write_quotes_to_csv(quotes: [Quote], output_csv_path: str) -> None:
 def main(output_csv_path: str) -> None:
     quotes = parse_quotes()
     write_quotes_to_csv(quotes, output_csv_path)
+
 
 if __name__ == "__main__":
     main("quotes.csv")
